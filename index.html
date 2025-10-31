@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #f4f4f4;
+            border-radius: 8px;
+        }
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 24px auto;
+            background: #ddd;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-top: 12px;
+        }
+        .info-value {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://via.placeholder.com/120" alt="Profile Image" class="profile-image">
+    <div>
+        <div class="info-label">Name</div>
+        <div class="info-value">Jane Doe</div>
 
+        <div class="info-label">Date of Birth</div>
+        <div class="info-value">1990-01-01</div>
+
+        <div class="info-label">Address</div>
+        <div class="info-value">123 Main St, Hometown, Country</div>
+    </div>
+</body>
+</html>
