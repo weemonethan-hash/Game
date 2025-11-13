@@ -1,47 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info Display</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 40px auto;
-            padding: 24px;
-            background: #f4f4f4;
-            border-radius: 8px;
-        }
-        .profile-image {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 50%;
-            display: block;
-            margin: 0 auto 24px auto;
-            background: #ddd;
-        }
-        .info-label {
-            font-weight: bold;
-            margin-top: 12px;
-        }
-        .info-value {
-            margin-bottom: 8px;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My School Timetable</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f3f3;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+    margin: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 92%;
+    max-width: 900px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  th {
+    background: #003366;
+    color: #fff;
+  }
+  caption {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 10px;
+  }
+  .no-school {
+    padding: 30px;
+    text-align: center;
+  }
+  .current {
+    background-color: #fff3b0; /* highlight current period */
+  }
+  #countdown {
+    margin: 10px 0 20px 0;
+    font-size: 1rem;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
-    <img src="https://via.placeholder.com/120" alt="Profile Image" class="profile-image">
-    <div>
-        <div class="info-label">Name</div>
-        <div class="info-value">Jane Doe</div>
 
-        <div class="info-label">Date of Birth</div>
-        <div class="info-value">1990-01-01</div>
+<div>
+  <div id="countdown"></div>
+  <table id="timetable" aria-label="Today's timetable">
+    <caption>Today's Timetable</caption>
+    <thead>
+      <tr><th>Time</th><th>Period</th><th>Subject</th><th>Teacher</th><th>Room</th></tr>
+    </thead>
+    <tbody id="schedule"></tbody>
+  </table>
+</div>
 
-        <div class="info-label">Address</div>
-        <div class="info-value">123 Main St, Hometown, Country</div>
-    </div>
+<script>
+const timetable = {
+  Monday: [
+    ["08:50–09:00","Reg","Tutor Time","Miss Dunlop","Rm G129"],
+    ["09:00–09:50","1","Mathematics NAT5","Mrs Pacher","Rm G128"],
+    ["09:50–10:40","2","Mathematics NAT5","Mrs Pacher","Rm G128"],
+    ["10:40–10:55","Break","","",""],
+    ["10:55–11:45","3","Design & Manufacture NAT5","Mr MacLennan","Rm TECH"],
+    ["11:45–12:35","4","Design & Manufacture NAT5","Mr MacLennan","Rm TECH"],
+    ["12:35–13:20","Lunch","","",""],
+    ["13:20–14:10","5","Personal & Social Education","Mrs Helley","Rm F178"],
+    ["14:10–15:00","6","English NAT5","Dr Henderson","Rm F113"],
+    ["15:00–15:50","7","English NAT5","Dr Henderson","Rm F113"]
+  ],
+  Tuesday: [
+    ["08:50–09:00","Reg","Tutor Time","Miss Dunlop","Rm G129"],
+    ["09:00–09:50","1","Cyber Security School","Mr Creaney","Rm S106"],
+    ["09:50–10:40","2","English NAT5","Dr Henderson","Rm F113"],
+    ["10:40–10:55","Break","","",""],
+    ["10:55–11:45","3","Mathematics NAT5","Mrs Pacher","Rm G128"],
+    ["11:45–12:35","4","Mathematics NAT5","Mrs Pacher","Rm G128"],
+    ["12:35–13:20","Lunch","","",""],
+    ["13:20–14:10","5","Design & Manufacture NAT5","Mr MacLennan","Rm TECH"],
+    ["14:10–15:00","6","Practical Woodworking NAT5","Mr MacLennan","Rm TECH"],
+    ["15:00–15:50","7","Practical Woodworking NAT5","Mr MacLennan","Rm TECH"]
+  ],
+  Wednesday: [
+    ["08:50–09:00","Reg","Tutor Time","Miss Dunlop","Rm G129"],
+    ["09:00–09:50","1","English NAT5","Dr Henderson","Rm F113"],
+    ["09:50–10:40","2","English NAT5","Dr Henderson","Rm F113"],
+    ["10:40–10:55","Break","","",""],
+    ["10:55–11:45","3","Computing Science NAT5","Mr McCabe","Rm F177"],
+    ["11:45–12:35","4","Computing Science NAT5","Mr McCabe","Rm F177"],
+    ["12:35–13:20","Lunch","","",""],
+    ["13:20–14:10","5","Cyber Security School","-","Rm College"],
+    ["14:10–15:00","6","Cyber Security School","-","Rm College"]
+  ],
+  Thursday: [
+    ["08:50–09:00","Reg","Tutor Time","Miss Dunlop","Rm G129"],
+    ["09:00–09:50","1","Computing Science NAT5","Mr McCabe","Rm F177"],
+    ["09:50–10:40","2","Mathematics NAT5","Mrs Pacher","Rm G128"],
+    ["10:40–10:55","Break","","",""],
+    ["10:55–11:45","3","Design & Manufacture NAT5","Mr MacLennan","Rm TECH"],
+    ["11:45–12:35","4","Design & Manufacture NAT5","Mr MacLennan","Rm TECH"],
+    ["12:35–13:20","Lunch","","",""],
+    ["13:20–14:10","5","Practical Woodworking NAT5","Mr MacLennan","Rm TECH"],
+    ["14:10–15:00","6","Practical Woodworking NAT5","Mr MacLennan","Rm TECH"]
+  ],
+  Friday: [
+    ["08:50–09:00","Reg","Tutor Time","Miss Dunlop","Rm G129"],
+    ["09:00–09:50","1","Computing Science NAT5","Mr McCabe","Pm E177"],
+    ["09:50–10:40","2","Computing Science NAT5","Mr McCabe","Rm F177"],
+    ["10:40–10:55","Break","","",""],
+    ["10:55–11:45","3","Physical Education School","Mr MacDonald","Rm PE"],
+    ["11:45–12:35","4","Practical Woodworking NAT5","Mr MacLennan","Rm TECH"],
+    ["12:35–13:20","Lunch","","",""],
+    ["13:20–14:10","5","Cyber Security School","-","Rm College"],
+    ["14:10–15:00","6","Cyber Security School","-","Rm College"]
+  ]
+};
+
+function parseTime(str) {
+  const [h, m] = str.split(":").map(Number);
+  return {h,m};
+}
+
+function timeToDate(today, str) {
+  const {h,m} = parseTime(str);
+  const d = new Date(today);
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+function renderToday() {
+  const today = new Date();
+  const todayName = today.toLocaleDateString("en-GB",{weekday:"long"});
+  const schedule = timetable[todayName];
+  const tbody = document.getElementById("schedule");
+  tbody.innerHTML = "";
+
+  const countdownEl = document.getElementById("countdown");
+  
+  if (!schedule) {
+    countdownEl.textContent = "";
+    const row = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 5;
+    td.className = "no-school";
+    td.textContent = (todayName === "Saturday" || todayName === "Sunday") ? "No school – Weekend!" : "No school today";
+    row.appendChild(td);
+    tbody.appendChild(row);
+    return;
+  }
+
+  let nextPeriodTime = null;
+
+  schedule.forEach(rowData => {
+    const tr = document.createElement("tr");
+    const [time, period, subject, teacher, room] = rowData;
+    const cells = [time, period || "", subject || "", teacher || "", room || ""];
+    
+    cells.forEach(text => {
+      const td = document.createElement("td");
+      td.textContent = text;
+      tr.appendChild(td);
+    });
+
+    // Highlight current period
+    if (time.includes("–")) {
+      const [startStr, endStr] = time.split("–");
+      const start = timeToDate(today, startStr);
+      const end = timeToDate(today, endStr);
+      if (today >= start && today <= end) {
+        tr.classList.add("current");
+      } else if (today < start && !nextPeriodTime) {
+        nextPeriodTime = start;
+      }
+    }
+    
+    tbody.appendChild(tr);
+  });
+
+  // Countdown to next period
+  if (nextPeriodTime) {
+    const diffMs = nextPeriodTime - today;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHrs = Math.floor(diffMins / 60);
+    const mins = diffMins % 60;
+    countdownEl.textContent = `Next period starts in ${diffHrs > 0 ? diffHrs + "h " : ""}${mins}min`;
+  } else {
+    countdownEl.textContent = "All periods for today are finished!";
+  }
+}
+
+renderToday();
+setInterval(renderToday, 60000); // update every minute
+</script>
+
 </body>
 </html>
